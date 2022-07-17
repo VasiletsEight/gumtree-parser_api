@@ -19,7 +19,7 @@
     ]
   },
   "ts-node": {
-    "files": true,
+    "files": true
   },
   "include": [
     "src/**/*"
