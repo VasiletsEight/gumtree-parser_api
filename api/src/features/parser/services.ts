@@ -1,16 +1,16 @@
 import getHtmCollectionByClassName from "../../utils/dom/dom";
 import axiosGumtree from "../../utils/requests/gumtree.req";
-import {RequestParserBody} from "./type";
+import {RequestParserBody, UserData} from "./type";
 import createExel from "../../utils/createExel/createExel";
 
 const postParserService = async ({path}: RequestParserBody): Promise<Buffer> => {
-    const getLinksCollection: HTMLCollectionOf<Element> = await (async (path: string) => {
+    const getLinksCollection = async (): Promise<HTMLCollectionOf<Element>> => {
         const html = await axiosGumtree.getBusinessSend(path);
 
         return getHtmCollectionByClassName(html, "listing-link");
-    })(path);
+    };
 
-    const getAdvertisement = async (path: string): Promise<[string, string] | null> => {
+    const getAdvertisementCollection = async (path: string): Promise<HTMLCollectionOf<Element>[] | null> => {
         const html = await axiosGumtree.getProofingSend(path);
         const includePhoneIcon: HTMLCollectionOf<Element> = getHtmCollectionByClassName(html, "icon icon--phone");
 
@@ -18,15 +18,21 @@ const postParserService = async ({path}: RequestParserBody): Promise<Buffer> => 
 
         const phoneCollection: HTMLCollectionOf<Element> = getHtmCollectionByClassName(html, "seller-phone-number-title");
         const nameCollection: HTMLCollectionOf<Element> = getHtmCollectionByClassName(html, "truncate-line seller-rating-block-name");
-        const phone: string = phoneCollection[0].innerHTML || "phone not found";
-        const name: string = nameCollection[0]?.innerHTML || "name not found";
 
-        return [name, phone];
+        return [nameCollection, phoneCollection];
     }
 
-    const linkToHref:string[] = [...Array(getLinksCollection.length).keys()].map((item) => getLinksCollection[item].getAttribute("href")!);
-    const allAdvertisement: Array<[string, string] | null> = await Promise.all(linkToHref.map(getAdvertisement));
-    const filterAdvertisement: Array<[string, string]> = allAdvertisement.filter((item: [string, string] | null): item is [string, string] => item !== null);
+    const getUser = ([nameCollection, phoneCollection]: HTMLCollectionOf<Element>[]): UserData => {
+        const phone: string = phoneCollection[0]?.innerHTML || "N.A";
+        const name: string = nameCollection[0]?.innerHTML || "N.A";
+
+        return {name, phone};
+    }
+
+    const linkCollection = await getLinksCollection();
+    const linkToHref: string[] = [...Array(linkCollection.length).keys()].map((item) => linkCollection[item].getAttribute("href")!);
+    const allAdvertisement: Array<HTMLCollectionOf<Element>[] | null> = await Promise.all(linkToHref.map(getAdvertisementCollection));
+    const filterAdvertisement: UserData[] = allAdvertisement.flatMap((item: HTMLCollectionOf<Element>[] | null) => item ? getUser(item) : []);
 
     return await createExel(filterAdvertisement);
 }

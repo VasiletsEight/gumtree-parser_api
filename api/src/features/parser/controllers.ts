@@ -11,7 +11,6 @@ const post = (request: FastifyRequest<ParserPost>, reply: FastifyReply) => {
             reply.status(200).send(buffer);
         })
         .catch((err) => {
-            console.log(err);
             reply.status(500).send({err: err})
         })
 }

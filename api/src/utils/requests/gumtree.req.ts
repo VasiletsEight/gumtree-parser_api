@@ -4,7 +4,7 @@ const headers = {"cookie": "gt_ab=ln:M2Exc3k=; gt_p=id:ZjA4MDJiOTEtZDJhNS00NDBjL
 
 const axiosInstance = axios.create({
     baseURL: "https://www.gumtree.com",
-    timeout: 10000,
+    timeout: 50000,
     headers,
 })
 
