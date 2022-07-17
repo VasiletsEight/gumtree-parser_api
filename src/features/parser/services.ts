@@ -5,13 +5,13 @@ import createExel from "../../utils/createExel/createExel";
 
 const postParserService = async ({path}: RequestParserBody): Promise<Buffer> => {
     const getLinksCollection = async (): Promise<HTMLCollectionOf<Element>> => {
-        const html = await axiosGumtree.getBusinessSend(path);
+        const html = await axiosGumtree.getBusinessSend(path) || "";
 
         return getHtmCollectionByClassName(html, "listing-link");
     };
 
     const getAdvertisementCollection = async (path: string): Promise<HTMLCollectionOf<Element>[] | null> => {
-        const html = await axiosGumtree.getProofingSend(path);
+        const html = await axiosGumtree.getProofingSend(path) || "";
         const includePhoneIcon: HTMLCollectionOf<Element> = getHtmCollectionByClassName(html, "icon icon--phone");
 
         if (includePhoneIcon.length === 0) return null;

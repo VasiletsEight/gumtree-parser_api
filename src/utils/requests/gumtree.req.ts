@@ -8,17 +8,25 @@ const axiosInstance = axios.create({
     headers,
 })
 
-const getBusinessSend = async (path: string): Promise<string> => {
-    const response = await axiosInstance.get(path);
+const getBusinessSend = async (path: string): Promise<string | null> => {
+    try {
+        const response = await axiosInstance.get(path);
 
-    return response.data;
+        return response.data;
+    } catch (err) {
+        return null;
+    }
 }
 
-const getProofingSend = async (path: string): Promise<string> => {
-    const params = {srn: true}
-    const response = await axiosInstance.get(path, {headers, params});
+const getProofingSend = async (path: string): Promise<string | null> => {
+    try {
+        const params = {srn: true}
+        const response = await axiosInstance.get(path, {headers, params});
 
-    return response.data;
+        return response.data;
+    } catch (err) {
+        return null
+    }
 }
 
 export default {getBusinessSend, getProofingSend}
