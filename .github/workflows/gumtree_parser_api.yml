@@ -1,27 +1,34 @@
-name: Development workflow
+name: Node.js CI
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Development Code
-        uses: actions/checkout@v2
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v1
-        with:
-          node-version: 18.x
-        - run: yarn install --production
-        - run: yarn build --if-present
-        - run: yarn start
+    strategy:
+      matrix:
+        node-version: [ 18.x ]
 
-      - name: Deploy to Heroku
-        uses: akhileshns/heroku-deploy@v3.12.12
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: yarn install --production
+      - run: yarn build --if-present
+      - run: npm test
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_SECRET_API }}
           heroku_app_name: 'gumtree-parser-api'
