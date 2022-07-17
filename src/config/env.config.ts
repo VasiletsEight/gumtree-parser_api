@@ -1,3 +1,5 @@
+import {fastifyEnvOpt} from "@fastify/env";
+
 const schema = {
     type: 'object',
     required: ["NODE_ENV", "PORT", "HOST"],
@@ -6,7 +8,8 @@ const schema = {
             type: 'string'
         },
         PORT: {
-            type: 'number'
+            type: 'number',
+            default: 300
         },
         HOST: {
             type: 'string'
@@ -14,7 +17,7 @@ const schema = {
     }
 }
 
-const options = {
+const options: fastifyEnvOpt = {
     dotenv: true,
     confKey: 'config',
     schema: schema,
