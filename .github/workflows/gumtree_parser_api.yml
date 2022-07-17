@@ -16,10 +16,11 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 18.x
-      run: |
-        yarn install --production
-        yarn build --if-present
-        yarn start
+        - run: cd api
+        - run: yarn install --production
+        - run: yarn build --if-present
+        - run: yarn start
+
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
