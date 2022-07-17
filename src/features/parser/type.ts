@@ -1,13 +1,21 @@
 import {Static} from "@sinclair/typebox";
 import schema from "./schema";
 
-export interface UserData {
-    name: string;
-    phone: string;
+export type RequestParserCategoryBody = Static<typeof schema.ParserCategoryBody>;
+export type RequestParserAdvertisementBody = Static<typeof schema.ParserAdvertisementBody>;
+export type RequestFileBody = Static<typeof schema.ParserFileBody>;
+export type UserData = RequestFileBody["users"][number];
+
+export interface ParserCategoryPost {
+    Body: RequestParserCategoryBody;
 }
 
-export interface ParserPost {
-    Body: RequestParserBody;
+export interface ParserAdvertisementPost {
+    Body: RequestParserAdvertisementBody;
 }
 
-export type RequestParserBody = Static<typeof schema.ParserBody>;
+export interface ParserFilePost {
+    Body: RequestFileBody;
+}
+
+
