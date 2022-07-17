@@ -16,7 +16,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 18.x
-        - run: cd api
         - run: yarn install --production
         - run: yarn build --if-present
         - run: yarn start
