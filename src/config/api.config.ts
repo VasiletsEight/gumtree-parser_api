@@ -3,9 +3,8 @@ import parserRoute from "../features/parser/routes";
 import envConfig from "./env.config";
 import fastifyEnv from "@fastify/env";
 import loggerConfig from "./logger.config";
-import {FastifyInstance} from "fastify/types/instance";
 
-const fastify: FastifyInstance = Fastify({logger: loggerConfig});
+const fastify = Fastify({logger: loggerConfig});
 
 fastify.register(fastifyEnv, envConfig);
 fastify.register(parserRoute, {prefix: "/parser"});

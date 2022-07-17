@@ -1,6 +1,6 @@
-import "typings/fastify";
+import "fastify";
 
-declare module 'typings/fastify' {
+declare module 'fastify' {
     export interface FastifyInstance {
         config: {
             NODE_ENV: "development" | "production";
