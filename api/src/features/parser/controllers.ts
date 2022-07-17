@@ -3,7 +3,6 @@ import services from "./services";
 import {ParserPost} from "./type";
 
 const post = (request: FastifyRequest<ParserPost>, reply: FastifyReply) => {
-
     services.postParserService(request.body)
         .then((buffer: Buffer) => {
             reply.header('Content-Disposition', `attachment; filename="data.xlsx"`);
