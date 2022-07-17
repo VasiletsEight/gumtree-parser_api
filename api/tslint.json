@@ -1,0 +1,45 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:recommended"
+  ],
+  "jsRules": {},
+  "rules": {
+    "no-any": true,
+    "ban-types": [
+      true,
+      [
+        "Object",
+        "Use {} instead."
+      ]
+    ],
+    "semicolon": true,
+    "no-var-requires": true,
+    "prefer-for-of": true,
+    "no-eval": true,
+    "no-implicit-dependencies": true,
+    "triple-equals": true,
+    "max-line-length": {
+      "options": [
+        120
+      ]
+    },
+    "new-parens": true,
+    "no-arg": true,
+    "no-bitwise": true,
+    "no-conditional-assignment": true,
+    "no-consecutive-blank-lines": false,
+    "no-console": {
+      "severity": "warning",
+      "options": [
+        "debug",
+        "info",
+        "log",
+        "time",
+        "timeEnd",
+        "trace"
+      ]
+    }
+  },
+  "rulesDirectory": []
+}

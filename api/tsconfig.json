@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "noEmitOnError": true,
+    "moduleResolution": "node",
+    "removeComments": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "baseUrl": "src",
+    "typeRoots": [
+      "./node_modules/@types/",
+      "./src/typings/"
+    ]
+  },
+  "ts-node": {
+    "files": true,
+  },
+  "include": [
+    "src/**/*"
+  ]
+}
