@@ -5,8 +5,7 @@ const transport = {
         ignore: 'pid,hostname,res,reqId,responseTime,req'
     }
 }
-const logger = {
-    transport: process.env["NODE_ENV"] === "development" ? transport : undefined
-}
+
+const logger = process.env["NODE_ENV"] === "development" && {transport: transport};
 
 export default logger;
