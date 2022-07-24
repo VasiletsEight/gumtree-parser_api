@@ -17,9 +17,9 @@ const postAdvertisementController = (request: FastifyRequest<ParserAdvertisement
 const postCreateFileController = (request: FastifyRequest<ParserFilePost>, reply: FastifyReply) => {
     services.postCreateFileService(request.body)
         .then((data: Buffer) => {
-            // reply.header('Content-Disposition', `attachment; filename="data.xlsx"`);
-            // reply.type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            reply.status(200).send("data");
+            reply.header('Content-Disposition', `attachment; filename="data.xlsx"`);
+            reply.type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            reply.status(200).send(data);
         })
         .catch((err) => reply.status(500).send({err: err}))
 }
