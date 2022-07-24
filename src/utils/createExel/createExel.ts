@@ -1,5 +1,5 @@
 import {Workbook} from "excel4node";
-import {UserData} from "../../features/parser/type";
+import {UserData} from "features/parser/type";
 
 const createExel = async (fields: UserData[]): Promise<Buffer> => {
     const wb = new Workbook();
