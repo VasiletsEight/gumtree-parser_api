@@ -1,7 +1,7 @@
-import getHtmCollectionByClassName from "utils/dom/dom";
-import axiosGumtree from "utils/requests/gumtree.req";
+import getHtmCollectionByClassName from "../../utils/dom/dom";
+import axiosGumtree from "../../utils/requests/gumtree.req";
 import {RequestParserFileBody, UserData} from "./type";
-import createExel from "utils/createExel/createExel";
+import createExel from "../../utils/createExel/createExel";
 
 const postFileService = async ({path}: RequestParserFileBody): Promise<Buffer> => {
     const getArticlesHref = async (): Promise<string[]> => {
