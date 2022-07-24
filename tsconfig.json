@@ -12,7 +12,7 @@
     "removeComments": true,
     "outDir": "dist",
     "rootDir": "src",
-    "baseUrl": "src",
+    "baseUrl": "./src",
     "typeRoots": [
       "./src/typings/",
       "./node_modules/@types/"

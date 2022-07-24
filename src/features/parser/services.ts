@@ -4,7 +4,7 @@ import {RequestParserFileBody, UserData} from "./type";
 import createExel from "utils/createExel/createExel";
 
 const postFileService = async ({path}: RequestParserFileBody): Promise<Buffer> => {
-    const getArticlesHref = async ():Promise<string[]>=>{
+    const getArticlesHref = async (): Promise<string[]> => {
         const html = await axiosGumtree.getCategorySend(path) || "";
         const linkCollection = getHtmCollectionByClassName(html, "listing-link");
 
