@@ -1,10 +1,10 @@
 import {FastifyInstance} from "fastify";
-import {ParserFilePost} from "./type";
+import {ParserPost} from "./type";
 import controller from "./controllers";
 import schema from "./schema";
 
 const routes = async (fastify: FastifyInstance) => {
-    fastify.post<ParserFilePost>('/file', schema.ParserFileSchema, controller.postFileController);
+    fastify.post<ParserPost>('/', schema.ParserSchema, controller.postParserController);
 };
 
 export default routes;

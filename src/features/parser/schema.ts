@@ -1,19 +1,12 @@
 import {Type} from '@sinclair/typebox'
 
-const ParserFileBody = Type.Object({
+const ParserBody = Type.Object({
     path: Type.String(),
 });
 
-const ParserAdvertisementBody = Type.Object({
-    hrefs: Type.Array(Type.String()),
-});
-
-const ParserFileSchema = {schema: {body: ParserFileBody}};
-const ParserAdvertisementSchema = {schema: {body: ParserAdvertisementBody}};
+const ParserSchema = {schema: {body: ParserBody}};
 
 export default {
-    ParserAdvertisementBody,
-    ParserFileBody,
-    ParserAdvertisementSchema,
-    ParserFileSchema
+    ParserBody,
+    ParserSchema
 };

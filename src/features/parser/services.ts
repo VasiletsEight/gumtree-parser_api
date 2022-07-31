@@ -1,12 +1,11 @@
 import getHtmCollectionByClassName from "../../utils/dom/dom";
 import axiosGumtree from "../../utils/requests/gumtree.req";
-import {RequestParserFileBody, UserData} from "./type";
-import createExel from "../../utils/createExel/createExel";
+import {ReplayParser, RequestParserBody} from "./type";
 
-const postFileService = async ({path}: RequestParserFileBody): Promise<Buffer> => {
+const postParserService = async ({path}: RequestParserBody): Promise<ReplayParser[]> => {
     const getArticlesHref = async (): Promise<string[]> => {
-        const html = await axiosGumtree.getCategorySend(path) || "";
-        const linkCollection = getHtmCollectionByClassName(html, "listing-link");
+        const html = await axiosGumtree.getCategorySend(path);
+        const linkCollection = getHtmCollectionByClassName(html || "", "listing-link");
 
         return [...Array(linkCollection.length).keys()].map((item) => linkCollection[item].getAttribute("href")!);
     }
@@ -23,7 +22,7 @@ const postFileService = async ({path}: RequestParserFileBody): Promise<Buffer> =
         return [nameCollection, phoneCollection];
     }
 
-    const getUser = ([nameCollection, phoneCollection]: HTMLCollectionOf<Element>[]): UserData => {
+    const getUser = ([nameCollection, phoneCollection]: HTMLCollectionOf<Element>[]): ReplayParser => {
         const phone: string = phoneCollection[0]?.innerHTML || "N.A";
         const name: string = nameCollection[0]?.innerHTML || "N.A";
 
@@ -32,10 +31,8 @@ const postFileService = async ({path}: RequestParserFileBody): Promise<Buffer> =
 
     const hrefs = await getArticlesHref();
     const allAdvertisement: (HTMLCollectionOf<Element>[] | null)[] = await Promise.all(hrefs.map(getAdvertisementCollection));
-    const users = allAdvertisement.flatMap((item: HTMLCollectionOf<Element>[] | null) => item ? getUser(item) : []);
 
-    return await createExel(users);
-
+    return allAdvertisement.flatMap((item: HTMLCollectionOf<Element>[] | null) => item ? getUser(item) : []);
 }
 
-export default {postFileService}
+export default {postParserService}
