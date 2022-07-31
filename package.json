@@ -14,10 +14,12 @@
   "author": "VasiletsFour",
   "description": "Gumtree api for parser ",
   "dependencies": {
+    "@fastify/cors": "^8.0.0",
     "@fastify/env": "^4.0.0",
     "@fastify/type-provider-typebox": "^2.1.0",
     "@sinclair/typebox": "^0.24.20",
     "axios": "^0.27.2",
+    "dotenv": "^16.0.1",
     "excel4node": "^1.7.2",
     "fastify": "^4.2.1",
     "fastify-cli": "^4.3.0",
