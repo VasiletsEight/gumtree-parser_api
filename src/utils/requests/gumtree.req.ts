@@ -1,32 +1,30 @@
 import axios, {AxiosResponse} from "axios";
+import dotenv from 'dotenv'
+import {requestErrHandle} from "./requestErrHandle";
+
+dotenv.config();
 
 const headers = {"cookie": "gt_ab=ln:M2Exc3k=; gt_p=id:ZjA4MDJiOTEtZDJhNS00NDBjLWEwNTAtZjc2ODg0MWZmNDVk; gt_appBanner=; GCLB=CI2v3NvCm-HdvgE; _ga=GA1.2.1197546081.1656755982; _gid=GA1.2.1052684639.1656755982; rbzid=3Iwh92fcU8Ml6CBYfIZCa2jNNzTd8/3LTr8bMvPOAOEJJAh64jbgNFCm8eVCGkra34lLRCrl5saAwGLMUXCxUdupzFS1ZrFzHAwzTORqbrijxzkV0g6N/SNVDe2e3FO5LyH/HgnP0RzopBmLFzIDZ6FzDiKJGR6U2cZzwSZUfrA15EBrtOJP6VwPA5OvQWJtHQ3mBC82Mdb2bWfDOZ3jZoUJjZIhgdDI9sN6ZXyzKrql9RELbVoDprv6tIqNJqnTSUl/CNfA6cSxuwCl1LqwG6j3w3gnpihXwZxHgHUKvtM=; rbzsessionid=a9108b135a8e8d47b4e0bbc2c2614e68; OptanonAlertBoxClosed=2022-07-02T09:59:47.379Z; _pbjs_userid_consent_data=8968533647377164; eupubconsent-v2=CPbgOa4PbgOa4AcABBENCWCsAP_AAAAAAAYgI2Nf_X__b3_j-_59f_t0eY1P9_7_v-0zjhfdt-8N2f_X_L8X_2M7vF36pq4KuR4Eu3LBIQVlHOHcTUmw6okVrzPsbk2Mr7NKJ7PEmnMbO2dYGH9_n93T-ZKY7_____77_v-_______f__-_f___5_3_--_f_V_99zfn9_____9_N___9v-gAAAAAAAAAAH3AAAAkEgnAAIAAXABQAFQAMgAcAA8ACAAGEANAA1AB5AEMARQAmABPACqAFgAN4AcwA9ACEAENAIgAiYBLAEuAJoAUoAtwBhgDIAGqANkAd4A9gB8QD7AP0AgEBFwEYAI0ARwAlIBQQCngFXALmAYoA1gBtADcAHEAPQAh0BIgCYgEygJsATsAocBSICxQFsALkAXeAvMBgwDCQGGgMiAZIAycBlwDOQGfANIAadA1gDWQG6wORA5UBy4DrAHjhAC8A5gDnAKWAYQBDYCLwFPgMPAZMA6QB2ADswHdAPAAeUA9oB7sD5APlAfYA_cCAgEDAIJgQYDQGwAuACGAGQANkAfgBAACMAFPAKvAWgBaQDWAIdASIAmwBOwCkQFyAMJAYwAycBnIDPAGfAOSAcoA6wB-AYAOAOYApYCGwEXgMPAdmA90QAIABqAOYApYCGwEXgMPAdmA90RAXAEMAMgAbIA_ACAAEYAKeAVcA1gCHQEiAJsATsApEBcgDCQGTgM5AZ8A5IBygDrAH4CoCwAFAAhgBMAC4ARgAjgBV4C0ALSAkEBMQCbAFNgLYAXIAvMBkQDOQGeAM-AckA5QB-AoAOAOYAeABSwGHgPsAgeBBsYAIABqAOYAeABSwGHgPiAfYBBsZATACGAEwAfYBGACOAFXAK2AmIBNgC0QFsALzAZEAzkBngDPgHJAOUAfgOg0gALgAoACoAGQAOAAgABdADAAMYAaABqADwAH0AQwBFACYAE8AKoAWAAuABiADMAG8AOYAegBDQCIAImASwBMACaAFGAKUAWIAt4BhAGGAMgAZQA0QBsgDfAHeAPaAfYB-gD_gIsAjABHICUgJUAUEAp4BVwCxQFoAWkAuYBeQDFAG0ANwAcQA6YB6AEOgIvASCAkQBKgCbAE7AKHAU0AqwBYoC2AFwALkAXaAu8BeYDBgGEgMNAYkAxgBjwDJAGTgMqAZYAy4BnIDPgGiQNIA0kBpYDTgGqgNYAbGA3UBxcDkgOVAcuA6wB44D0gHqgPrAfgBAECCQEGhwBgAL4AhIBzAHOAYQBDYCIgGHgMmAbYA5AB0gDsAHZgPAAeUA9oB7oD4gHygPsAfuBA8CDAEGyEDoABYAFAAMgAuABiAEMAJgAVQAuABiADMAG8APQAsQBhADfAHeAPsAf4BGACOAEpAKCAUMAp4BV4C0ALSAXMAxQBtAD0AJBASIAlQBNgCmgFigLRAWwAuABcgC7QGJAMiAZOAzkBngDPgGiANJAaWA1UBwADkgHWAPHAfgBBIgASAC-AMqAcwBzgDwAMIAtoBh4DbAHRgOwAeUA9EB7oD4gH2AQPAgwBBslAzAAQAAsACgAGQAOQAwADEAHgARAAmABVAC4AGIAMwAhoBEAESAKMAUoAtwBhADVAGyAO8AfgBGACOAFPAKvAWgBaQDFAG4AQ6Ai8BIgCbAFigLYAXaAvMBkQDJwGWAM5AZ4Az4BpADWAHAAOsAfgBA8CCRIAWAIQAZQA5gGHgOkAdgA8oB7QD7AH7gQYKQSQAFwAUABUADIAHAAQQAwADGAGgAagA8gCGAIoATAAngBSACqAFgAMQAZgA5gCGgEQARIAowBSgCxAFuAMIAZQA0QBqgDZAHfAPsA_QCLAEYAI4ASkAoIBQwCrgFbALmAXkA2gBuAD0AIdAReAkQBNgCdgFDgLFAWwAuABcgC7QF5gMNAYwAyIBkgDJwGXAM5AZ4Az6BpAGkwNYA1kBsYDdYHJgcoA5cB1gDxwH4FACgAXwBCQDmAOcAeABhAFPgMPAZMA7AB5QD2gHugPiAfYA_cCBgEDwIJgQYAg2AAA.f_gAAAAAAAAA; _pubcid=7b7de4db-48ac-4ea3-8f79-560b34748ac9; gt_userPref=isSearchOpen:dHJ1ZQ==|recentAdsOne:Y2Fycy12YW5zLW1vdG9yYmlrZXM=|cookiePolicy:dHJ1ZQ==|recentAdsTwo:Zm9yLXNhbGU=|location:dWs=; _clck=hcmfnb|1|f2t|0; _gcl_au=1.1.480683726.1656755995; __gads=ID=9da86725a1b90354:T=1656755998:S=ALNI_Mal5dzBdmRUrX8Dy_4vZPpq6NB8ow; __gpi=UID=00000808042993b3:T=1656755998:RT=1656755998:S=ALNI_MZsEoLX3PVg0U5XITDaKCVLYuBJng; _lr_env_src_ats=false; gt_s=sc:MjU1NA==|clicksource_featured:MTQzNTM1NTY0OCwxNDMzNTk0MzUyLDExMjcyNDY2NDYsMTQzNDU3MDc3OSwxMjYzOTY1NjI2|ar:aHR0cDovL3d3dy5ndW10cmVlLmNvbS9idXNpbmVzcy1zZXJ2aWNlcw==|st:MTY1Njc1NjQ5MDIxNg==|bci:Mjk1NDFGMDAxOTdCNjJBRjA5MUYwRUFEMTg0QTYzMzI=|id:bm9kZTBhYWx2cHRvcGF6aTU4bHllM3ZzNTRlcGcyMTQ5NzQ=|clicksource_natural:MTI5Nzg3NDQyOCwxNDM2NDA1ODA0LDE0MzA1MTg4NzYsMTI4MjM4NjA4MiwxMjgyMjU4NzcyLDE0MzY0MDUxMjMsMTQyNjA2NDk0MiwxNDMxMzAyNzgzLDE0MzY0MDA0NzIsMTQzNjQwNDkxMCwxNDE0NTcyMDQ3LDE0MTAwNzkxNjcsMTQzNjQwNDU4MCwxNDM2NDA0NzAyLDEzMDU3ODcyNTksMTQwMjg3Nzc1NCwxNDAyMzIzODE5LDEyODIyNTkyMjYsMTMxNzY5ODc4NywxNDM2NDA0MTM4LDE0MzM3ODQ3MzMsMTQzNjEzMDIzNCwxNDM2NDAzODU4LDE0MzY0MDM5MzUsMTQzNjQwMzc3OA==; lux_uid=165676350756211798; _lr_retry_request=true; ki_r=; gt_tm=edb6ae9e-0a8d-4f98-806d-e03ae0f4ec76; permutive-id=27cc4c5a-2e73-4920-a7b6-83add0643621; gt_adconsent=state:Mw==; _lr_geo_location=UA; _lr_drop_match_pixel=true; gt_lcb=; gt_rememberMe=RIJ0i+D7XO7AXdYvMpt5mq6ORBvzvyI3zo10RHof2AZwPcCs/Kzg8zM86VzSGsUhax8jop7Wz3frJ54ws0XtwRKNQRo/7kbHa7+4GZfsALHTYFKlz5rjAhmIyGBJ+DUAYA5cU6agLwiRCYpSZsMyPbcKjWtWt0o63i1J6StdWGA=; gt_mc=rcd:MA==|nuc:MA==; gt_userIntr=cnt:Mzc=; OptanonConsent=isIABGlobal=false&datestamp=Sat+Jul+02+2022+15%3A39%3A47+GMT%2B0300+(Eastern+European+Summer+Time)&version=6.10.0&landingPath=NotLandingPage&groups=FACEB%3A1%2CLIVER%3A1%2CSTACK42%3A1%2CC0026%3A1%2CC0028%3A1%2CC0029%3A1%2CMICRO%3A1%2CC0023%3A1%2CGAPTS%3A1%2CC0003%3A1%2CC0004%3A1%2CC0001%3A1&hosts=&consentId=1a28d0df-b9ea-446f-80e9-064673b4087d&interactionCount=1&geolocation=UA%3B07&AwaitingReconsent=false; _clsk=a512hn|1656765588013|37|1|m.clarity.ms/collect; ki_t=1656763526125%3B1656763526125%3B1656765588847%3B1%3B7; cto_bundle=mtX11192djI3SGhoS2FxR29SSlVDN1NJRG9GTk1PcXhpSCUyQm1GbVpDWklGcXIlMkZMejdMVkdXZVh5aDglMkI4aEhKVUxRWVQxNlh0M21LRGJsYjZCYXBsYzZDJTJGQ2p2TnBZRSUyRk4yb09YYlV0MkxBVkFPbENUZHNJQURHdnlSNEowY3NxVVZhQzA3ME03JTJCTlNFSzJPUHEzc084OCUyRnhIRlpTbHNaaWRkVTBSZ091T0plYXUxa2VqbDlubTByNjRwdEFzdkhSa3VtUA;"}
 
 const axiosInstance = axios.create({
-    baseURL: "https://www.gumtree.com",
+    baseURL: process.env.GUMTREE_URL || "https://www.gumtree.com",
     timeout: 50000,
     headers,
 })
 
-const getCategorySend = async (path: string): Promise<string | null> => {
-    try {
-        const response: AxiosResponse<string> = await axiosInstance.get(path);
+axiosInstance.interceptors.response.use((response) => response, requestErrHandle);
 
-        return response.data;
-    } catch (err) {
-        return null;
-    }
+const getCategorySend = async (path: string): Promise<string | null> => {
+    const response: AxiosResponse<string> = await axiosInstance.get(path);
+
+    return response.data;
 }
 
 const getProofingSend = async (path: string): Promise<string | null> => {
-    try {
-        const params = {srn: true}
-        const response: AxiosResponse<string> = await axiosInstance.get(path, {headers, params});
+    const params = {srn: true}
+    const response: AxiosResponse<string> = await axiosInstance.get(path, {headers, params});
 
-        return response.data;
-    } catch (err) {
-        return null
-    }
+    return response.data;
 }
 
 export default {getCategorySend, getProofingSend}
