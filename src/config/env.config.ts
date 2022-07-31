@@ -9,11 +9,14 @@ const schema = {
         },
         PORT: {
             type: 'number',
-            default: 300
+            default: 8000
         },
         HOST: {
             type: 'string'
         },
+        GUMTREE_URL:{
+            type:'string'
+        }
     }
 }
 
