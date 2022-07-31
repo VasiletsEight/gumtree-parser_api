@@ -8,4 +8,8 @@ declare module 'fastify' {
             HOST: string;
         }
     }
+
+    interface FastifyReply {
+        Ok: <T extends {}>(this: FastifyReply, data: T) => void;
+    }
 }
